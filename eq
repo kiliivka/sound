@@ -68,6 +68,7 @@ import com.soundamplifier.volumeboosterforandroid.volumeboostergoodev.bassbooste
 import com.soundamplifier.volumeboosterforandroid.volumeboostergoodev.bassboosterequalizer.services.MusicService;
 import com.soundamplifier.volumeboosterforandroid.volumeboostergoodev.bassboosterequalizer.services.NotificationService;
 import com.soundamplifier.volumeboosterforandroid.volumeboostergoodev.bassboosterequalizer.services.VolumeBoosterService;
+import com.soundamplifier.volumeboosterforandroid.volumeboostergoodev.bassboosterequalizer.AdManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -88,6 +89,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
     public static Handler someHandler2;
     public static TextView song_txt;
     public static TextView textView;
+    private AdManager adManager;
+    private int buttonClickCount = 0;
+    private static final int CLICKS_BEFORE_AD = 5; // Show ad every 5 clicks
+
     public static int themeColor = Color.parseColor("#FFA036");
     private FrameLayout adContainerView;
     private int audioSesionId;
@@ -261,6 +266,8 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         int i = 0;
         PresetReverb presetReverb2;
+        adManager = new AdManager(requireActivity().getApplication());
+
         int i2;
         this.view = LayoutInflater.from(this.mContext).inflate(R.layout.fragment_main_home_layout, viewGroup, false);
         HelperResizer.getheightandwidth(getContext());
@@ -1013,9 +1020,31 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 }
             }
         });
-        this.ic_mute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+        private void showAdIfNeeded() {
+            buttonClickCount++;
+            if (buttonClickCount >= CLICKS_BEFORE_AD) {
+                adManager.showInterstitialAd(requireActivity(), new AdManager.InterstitialAdCallback() {
+                    @Override
+                    public void onAdShown() {}
+
+                    @Override
+                    public void onAdDismissed() {
+                        buttonClickCount = 0;
+                    }
+
+                    @Override
+                    public void onAdFailed() {
+                        buttonClickCount = 0;
+                    }
+
+                    @Override
+                    public void onAdNotAllowed() {}
+                });
+            }
+        }
+
+            this.ic_mute.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_pressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1031,11 +1060,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(0, 0, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_thirty_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
+
+            this.ic_thirty_btn.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_pressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1051,11 +1079,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(3, 3, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_sixty_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
+
+            this.ic_sixty_btn.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_press);
@@ -1071,12 +1098,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(6, 6, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_hun.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
 
+            this.ic_hun.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1092,11 +1117,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(8, 8, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_onetwentyfive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
+
+            this.ic_onetwentyfive.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1112,11 +1136,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(10, 10, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_onfifty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
+
+            this.ic_onfifty.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1132,12 +1155,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(12, 12, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_onesevfive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
 
+            this.ic_onesevfive.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1153,12 +1174,10 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(14, 14, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
-        this.ic_max.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                showAdIfNeeded();
+            });
 
+            this.ic_max.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_unpressed);
                 EqualizerFragment.this.ic_thirty_btn.setImageResource(R.drawable.ic_normal_unpressed);
                 EqualizerFragment.this.ic_sixty_btn.setImageResource(R.drawable.sixty_unpress);
@@ -1174,8 +1193,12 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                 EqualizerFragment.this.vol_seek.invalidate();
                 VolumeBoosterService.setVolume(16, 16, EqualizerFragment.this.mContext);
                 NotificationService.start(EqualizerFragment.this.mContext, NotificationService.ACTION_INIT);
-            }
-        });
+                showAdIfNeeded();
+            });
+
+
+
+
         this.circular.setOnProgressChangedListener(new AnalogController.onProgressChangedListener() {
             @Override
             public void onProgressChanged(int i) {
