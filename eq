@@ -179,6 +179,29 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
             EqualizerFragment.this.myService.setMediaListener(EqualizerFragment.this.onMediaListener);
         }
 
+        private void showAdIfNeeded() {
+            buttonClickCount++;
+            if (buttonClickCount >= CLICKS_BEFORE_AD) {
+                adManager.showInterstitialAd(requireActivity(), new AdManager.InterstitialAdCallback() {
+                    @Override
+                    public void onAdShown() {}
+
+                    @Override
+                    public void onAdDismissed() {
+                        buttonClickCount = 0;
+                    }
+
+                    @Override
+                    public void onAdFailed() {
+                        buttonClickCount = 0;
+                    }
+
+                    @Override
+                    public void onAdNotAllowed() {}
+                });
+            }
+        }
+
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             Log.e("AAA", "Binder Disconnected");
@@ -1021,28 +1044,7 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
             }
         });
 
-        private void showAdIfNeeded() {
-            buttonClickCount++;
-            if (buttonClickCount >= CLICKS_BEFORE_AD) {
-                adManager.showInterstitialAd(requireActivity(), new AdManager.InterstitialAdCallback() {
-                    @Override
-                    public void onAdShown() {}
-
-                    @Override
-                    public void onAdDismissed() {
-                        buttonClickCount = 0;
-                    }
-
-                    @Override
-                    public void onAdFailed() {
-                        buttonClickCount = 0;
-                    }
-
-                    @Override
-                    public void onAdNotAllowed() {}
-                });
-            }
-        }
+        @Override;
 
             this.ic_mute.setOnClickListener(view -> {
                 EqualizerFragment.this.ic_mute.setImageResource(R.drawable.mute_pressed);
@@ -1227,6 +1229,7 @@ public class EqualizerFragment extends Fragment implements IOnBackPressed {
                     }
                 }
             }
+
 
             @Override
             public void onKnobReleased(int i, int i2) {
